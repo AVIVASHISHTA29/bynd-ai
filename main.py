@@ -36,6 +36,7 @@ def main():
     # Get the max row and column numbers
     max_row = transformed_ws.max_row
     max_col = transformed_ws.max_column
+    max_depth = max_row - data_start_row + 1  # Total data rows
 
     # Dictionary to store evaluated cell values
     cell_values = {}
@@ -65,7 +66,7 @@ def main():
                 target_value = cell_values[(row_idx, col_idx)]
 
                 # Find a formula by searching for arithmetic relationships
-                formula = find_formula(transformed_ws, cell, data_start_row, cell_values)
+                formula = find_formula(transformed_ws, cell, data_start_row, cell_values,max_depth)
                 if formula:
                     cell.value = formula
                     # Update cell_values with the formula result
@@ -99,7 +100,7 @@ def parse_number(value):
     else:
         return None
 
-def find_formula(ws, target_cell, data_start_row, cell_values, max_depth=10, tolerance=0.01):
+def find_formula(ws, target_cell, data_start_row, cell_values, max_depth, tolerance=0.01):
     """
     Find a formula for the target cell by checking arithmetic relationships
     with other cells in the same column, using cells from top to bottom.
